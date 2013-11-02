@@ -184,10 +184,49 @@ angular.module( 'ui.bootstrap.tooltip', [ 'ui.bootstrap.position', 'ui.bootstrap
             ttWidth = tooltip.prop( 'offsetWidth' );
             ttHeight = tooltip.prop( 'offsetHeight' );
             
-            // Calculate the tooltip's top and left coordinates to center it with
-            // this directive.
-            switch ( scope.tt_placement ) {
-              case 'right':
+            var fitsVerticallyCentered = (position.left + position.width / 2 + ttWidth / 2 <= $window.pageXOffset + $document.width()) &&
+                            (position.left + position.width / 2 - ttWidth / 2 >= $window.pageXOffset);
+
+		var pageYOffset = ($window.pageYOffset || $document[0].body.scrollTop || $document[0].documentElement.scrollTop);
+		var pageXOffset = ($window.pageXOffset || $document[0].body.scrollLeft || $document[0].documentElement.scrollLeft);
+
+		// Calculate the tooltip's top and left coordinates to center it with
+		// this directive.
+		switch (scope.tt_placement) {
+			case 'auto':
+				var ttLeft;
+				var ttTop;
+				if (fitsVerticallyCentered && (position.top - ttHeight >= pageYOffset)) {
+					// Top
+					ttLeft = position.left + position.width / 2 - ttWidth / 2;
+					ttTop = position.top - ttHeight;
+				} else if (fitsVerticallyCentered && (position.top + position.height + ttHeight <= pageYOffset + $document.height())) {
+					// Bottom
+					ttLeft = position.left + position.width / 2 - ttWidth / 2;
+					ttTop = position.top + position.height;                                   
+				} else if ((position.left + position.width + ttWidth <= pageXOffset + $document.width()) &&
+					(position.left + position.width + ttWidth >= pageXOffset)) {
+					// Right side
+					ttLeft = position.left + position.width;
+					ttTop = position.top + position.height / 2 - ttHeight / 2;
+				} else if ((position.left - ttWidth >= pageXOffset) &&
+					(position.left + position.width + ttWidth >= pageXOffset)) {
+					// Left side
+					ttLeft = position.left - ttWidth;
+					ttTop = position.top + position.height / 2 - ttHeight / 2;
+				} else {
+					// Tooltip too big
+					ttLeft = pageXOffset;
+					ttTop = pageYOffset;
+				}
+
+				ttPosition = {
+					top: ttTop,
+					left: ttLeft
+				};
+
+				break;
+               case 'right':
                 ttPosition = {
                   top: position.top + position.height / 2 - ttHeight / 2,
                   left: position.left + position.width
