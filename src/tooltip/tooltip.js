@@ -184,11 +184,14 @@ angular.module( 'ui.bootstrap.tooltip', [ 'ui.bootstrap.position', 'ui.bootstrap
             ttWidth = tooltip.prop( 'offsetWidth' );
             ttHeight = tooltip.prop( 'offsetHeight' );
             
-            var fitsVerticallyCentered = (position.left + position.width / 2 + ttWidth / 2 <= $window.pageXOffset + $document.width()) &&
-                            (position.left + position.width / 2 - ttWidth / 2 >= $window.pageXOffset);
-
 		var pageYOffset = ($window.pageYOffset || $document[0].body.scrollTop || $document[0].documentElement.scrollTop);
 		var pageXOffset = ($window.pageXOffset || $document[0].body.scrollLeft || $document[0].documentElement.scrollLeft);
+		var innerWidth = $window.innerWidth || $document.documentElement.clientWidth || $document.body.clientWidth;
+		var innerHeight = $window.innerHeight || $document.documentElement.clientHeight || $document.body.clientHeight;
+
+		
+            var fitsVerticallyCentered = (position.left + position.width / 2 + ttWidth / 2 <= pageXOffset + innerWidth) &&
+                            (position.left + position.width / 2 - ttWidth / 2 >= pageXOffset);
 
 		// Calculate the tooltip's top and left coordinates to center it with
 		// this directive.
@@ -204,12 +207,12 @@ angular.module( 'ui.bootstrap.tooltip', [ 'ui.bootstrap.position', 'ui.bootstrap
 					ttLeft = position.left + position.width / 2 - ttWidth / 2;
 					ttTop = position.top - ttHeight;
 					scope.tt_placement = 'top';
-				} else if (fitsVerticallyCentered && (position.top + position.height + ttHeight <= pageYOffset + $document.height())) {
+				} else if (fitsVerticallyCentered && (position.top + position.height + ttHeight <= pageYOffset + innerHeight)) {
 					// Bottom
 					ttLeft = position.left + position.width / 2 - ttWidth / 2;
 					ttTop = position.top + position.height;
 					scope.tt_placement = 'bottom';					
-				} else if ((position.left + position.width + ttWidth <= pageXOffset + $document.width()) &&
+				} else if ((position.left + position.width + ttWidth <= pageXOffset + innerWidth) &&
 					(position.left + position.width + ttWidth >= pageXOffset)) {
 					// Right side
 					ttLeft = position.left + position.width;
