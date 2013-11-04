@@ -36,9 +36,9 @@ angular.module( 'ui.bootstrap.tooltip', [ 'ui.bootstrap.position', 'ui.bootstrap
    *     $tooltipProvider.options( { placement: 'left' } );
    *   });
    */
-	this.options = function( value ) {
-		angular.extend( globalOptions, value );
-	};
+    this.options = function( value ) {
+        angular.extend( globalOptions, value );
+    };
 
   /**
    * This allows you to extend the set of trigger mappings available. E.g.:
@@ -183,61 +183,37 @@ angular.module( 'ui.bootstrap.tooltip', [ 'ui.bootstrap.position', 'ui.bootstrap
             // Get the height and width of the tooltip so we can center it.
             ttWidth = tooltip.prop( 'offsetWidth' );
             ttHeight = tooltip.prop( 'offsetHeight' );
+                    
+            scope.tt_placement = scope.tt_requested_placement;
             
-		var pageYOffset = ($window.pageYOffset || $document[0].body.scrollTop || $document[0].documentElement.scrollTop);
-		var pageXOffset = ($window.pageXOffset || $document[0].body.scrollLeft || $document[0].documentElement.scrollLeft);
-		var innerWidth = $window.innerWidth || $document.documentElement.clientWidth || $document.body.clientWidth;
-		var innerHeight = $window.innerHeight || $document.documentElement.clientHeight || $document.body.clientHeight;
+            if (scope.tt_placement == 'auto'){
+                var pageYOffset = ($window.pageYOffset || $document[0].body.scrollTop || $document[0].documentElement.scrollTop);
+                var pageXOffset = ($window.pageXOffset || $document[0].body.scrollLeft || $document[0].documentElement.scrollLeft);
+                var innerWidth = $window.innerWidth || $document.documentElement.clientWidth || $document.body.clientWidth;
+                var innerHeight = $window.innerHeight || $document.documentElement.clientHeight || $document.body.clientHeight;
 
-		
-            var fitsVerticallyCentered = (position.left + position.width / 2 + ttWidth / 2 <= pageXOffset + innerWidth) &&
-                            (position.left + position.width / 2 - ttWidth / 2 >= pageXOffset);
-
-		// Calculate the tooltip's top and left coordinates to center it with
-		// this directive.
-		
-		scope.tt_placement = scope.tt_requested_placement;
-		
-		switch (scope.tt_requested_placement) {
-			case 'auto':
-				var ttLeft;
-				var ttTop;
-				if (fitsVerticallyCentered && (position.top - ttHeight >= pageYOffset)) {
-					// Top
-					ttLeft = position.left + position.width / 2 - ttWidth / 2;
-					ttTop = position.top - ttHeight;
-					scope.tt_placement = 'top';
-				} else if (fitsVerticallyCentered && (position.top + position.height + ttHeight <= pageYOffset + innerHeight)) {
-					// Bottom
-					ttLeft = position.left + position.width / 2 - ttWidth / 2;
-					ttTop = position.top + position.height;
-					scope.tt_placement = 'bottom';					
-				} else if ((position.left + position.width + ttWidth <= pageXOffset + innerWidth) &&
-					(position.left + position.width + ttWidth >= pageXOffset)) {
-					// Right side
-					ttLeft = position.left + position.width;
-					ttTop = position.top + position.height / 2 - ttHeight / 2;
-					scope.tt_placement = 'right';
-				} else if ((position.left - ttWidth >= pageXOffset) &&
-					(position.left + position.width + ttWidth >= pageXOffset)) {
-					// Left side
-					ttLeft = position.left - ttWidth;
-					ttTop = position.top + position.height / 2 - ttHeight / 2;
-					scope.tt_placement = 'left';
-				} else {
-					// Tooltip too big
-					ttLeft = pageXOffset;
-					ttTop = pageYOffset;
-					
-					scope.tt_placement = 'top';
-				}
-
-				ttPosition = {
-					top: ttTop,
-					left: ttLeft
-				};
-
-				break;
+                var fitsVerticallyCentered = (position.left + position.width / 2 + ttWidth / 2 <= pageXOffset + innerWidth) &&
+                                (position.left + position.width / 2 - ttWidth / 2 >= pageXOffset);
+            
+                if (fitsVerticallyCentered && (position.top - ttHeight >= pageYOffset)) {
+                    scope.tt_placement = 'top';
+                } else if (fitsVerticallyCentered && (position.top + position.height + ttHeight <= pageYOffset + innerHeight)) {
+                    scope.tt_placement = 'bottom';					
+                } else if ((position.left + position.width + ttWidth <= pageXOffset + innerWidth) &&
+                    (position.left + position.width + ttWidth >= pageXOffset)) {
+                    scope.tt_placement = 'right';
+                } else if ((position.left - ttWidth >= pageXOffset) &&
+                    (position.left + position.width + ttWidth >= pageXOffset)) {
+                    scope.tt_placement = 'left';
+                } else {
+                    // Tooltip too big - using top					
+                    scope.tt_placement = 'top';
+                }			
+            }
+        
+            // Calculate the tooltip's top and left coordinates to center it with
+            // this directive.
+            switch (scope.tt_placement) {
                case 'right':
                 ttPosition = {
                   top: position.top + position.height / 2 - ttHeight / 2,
