@@ -27,7 +27,31 @@ angular.module( 'ui.bootstrap.tooltipPlacement', ['ui.bootstrap.position'] )
           // Tooltip too big - using top
           return 'top';
         }
+      },
+
+      getPosition: function ( tt_placement, position, ttWidth, ttHeight ) {
+        switch (tt_placement) {
+          case 'right':
+            return {
+              top: position.top + position.height / 2 - ttHeight / 2,
+              left: position.left + position.width
+            };
+          case 'bottom':
+            return {
+              top: position.top + position.height,
+              left: position.left + position.width / 2 - ttWidth / 2
+            };
+          case 'left':
+            return {
+              top: position.top + position.height / 2 - ttHeight / 2,
+              left: position.left - ttWidth
+            };
+          default:
+            return {
+              top: position.top - ttHeight,
+              left: position.left + position.width / 2 - ttWidth / 2
+            };
+        }
       }
     };
-  }] )
-;
+  }] );

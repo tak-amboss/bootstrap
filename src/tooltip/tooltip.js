@@ -269,32 +269,7 @@ angular.module( 'ui.bootstrap.tooltip', [ 'ui.bootstrap.position', 'ui.bootstrap
 =======
               // Calculate the tooltip's top and left coordinates to center it with
               // this directive.
-              switch (scope.tt_placement) {
-                case 'right':
-                  ttPosition = {
-                    top: position.top + position.height / 2 - ttHeight / 2,
-                    left: position.left + position.width
-                  };
-                  break;
-                case 'bottom':
-                  ttPosition = {
-                    top: position.top + position.height,
-                    left: position.left + position.width / 2 - ttWidth / 2
-                  };
-                  break;
-                case 'left':
-                  ttPosition = {
-                    top: position.top + position.height / 2 - ttHeight / 2,
-                    left: position.left - ttWidth
-                  };
-                  break;
-                default:
-                  ttPosition = {
-                    top: position.top - ttHeight,
-                    left: position.left + position.width / 2 - ttWidth / 2
-                  };
-                  break;
-              }
+              ttPosition = $tooltipPlacement.getPosition( scope.tt_placement, position, ttWidth, ttHeight );
 
               ttPosition.top += 'px';
               ttPosition.left += 'px';
