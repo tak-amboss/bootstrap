@@ -1,4 +1,4 @@
-angular.module('ui.bootstrap.position', [])
+angular.module( 'ui.bootstrap.position', [] )
 
 /**
  * A set of utility methods that can be use to retrieve position of DOM elements.
@@ -6,13 +6,13 @@ angular.module('ui.bootstrap.position', [])
  * relation to other, existing elements (this is the case for tooltips, popovers,
  * typeahead suggestions etc.).
  */
-  .factory('$position', ['$document', '$window', function ($document, $window) {
+  .factory( '$position', ['$document', '$window', function ( $document, $window ) {
 
-    function getStyle(el, cssprop) {
+    function getStyle( el, cssprop ) {
       if (el.currentStyle) { //IE
         return el.currentStyle[cssprop];
       } else if ($window.getComputedStyle) {
-        return $window.getComputedStyle(el)[cssprop];
+        return $window.getComputedStyle( el )[cssprop];
       }
       // finally try and get inline style
       return el.style[cssprop];
@@ -22,18 +22,18 @@ angular.module('ui.bootstrap.position', [])
      * Checks if a given element is statically positioned
      * @param element - raw DOM element
      */
-    function isStaticPositioned(element) {
-      return (getStyle(element, "position") || 'static' ) === 'static';
+    function isStaticPositioned( element ) {
+      return (getStyle( element, "position" ) || 'static' ) === 'static';
     }
 
     /**
      * returns the closest, non-statically positioned parentOffset of a given element
      * @param element
      */
-    var parentOffsetEl = function (element) {
+    var parentOffsetEl = function ( element ) {
       var docDomEl = $document[0];
       var offsetParent = element.offsetParent || docDomEl;
-      while (offsetParent && offsetParent !== docDomEl && isStaticPositioned(offsetParent) ) {
+      while (offsetParent && offsetParent !== docDomEl && isStaticPositioned( offsetParent )) {
         offsetParent = offsetParent.offsetParent;
       }
       return offsetParent || docDomEl;
@@ -44,20 +44,25 @@ angular.module('ui.bootstrap.position', [])
        * Provides read-only equivalent of jQuery's position function:
        * http://api.jquery.com/position/
        */
-      position: function (element) {
-        var elBCR = this.offset(element);
+      position: function ( element ) {
+        var elBCR = this.offset( element );
         var offsetParentBCR = { top: 0, left: 0 };
-        var offsetParentEl = parentOffsetEl(element[0]);
+        var offsetParentEl = parentOffsetEl( element[0] );
         if (offsetParentEl != $document[0]) {
-          offsetParentBCR = this.offset(angular.element(offsetParentEl));
+          offsetParentBCR = this.offset( angular.element( offsetParentEl ) );
           offsetParentBCR.top += offsetParentEl.clientTop - offsetParentEl.scrollTop;
           offsetParentBCR.left += offsetParentEl.clientLeft - offsetParentEl.scrollLeft;
         }
 
         var boundingClientRect = element[0].getBoundingClientRect();
         return {
+<<<<<<< HEAD
           width: boundingClientRect.width || element.prop('offsetWidth'),
           height: boundingClientRect.height || element.prop('offsetHeight'),
+=======
+          width: element.prop( 'offsetWidth' ),
+          height: element.prop( 'offsetHeight' ),
+>>>>>>> b8c7505... feat(tooltip) - pulled out auto positioning logic into service
           top: elBCR.top - offsetParentBCR.top,
           left: elBCR.left - offsetParentBCR.left
         };
@@ -67,14 +72,28 @@ angular.module('ui.bootstrap.position', [])
        * Provides read-only equivalent of jQuery's offset function:
        * http://api.jquery.com/offset/
        */
-      offset: function (element) {
+      offset: function ( element ) {
         var boundingClientRect = element[0].getBoundingClientRect();
         return {
+<<<<<<< HEAD
           width: boundingClientRect.width || element.prop('offsetWidth'),
           height: boundingClientRect.height || element.prop('offsetHeight'),
+=======
+          width: element.prop( 'offsetWidth' ),
+          height: element.prop( 'offsetHeight' ),
+>>>>>>> b8c7505... feat(tooltip) - pulled out auto positioning logic into service
           top: boundingClientRect.top + ($window.pageYOffset || $document[0].body.scrollTop || $document[0].documentElement.scrollTop),
-          left: boundingClientRect.left + ($window.pageXOffset || $document[0].body.scrollLeft  || $document[0].documentElement.scrollLeft)
+          left: boundingClientRect.left + ($window.pageXOffset || $document[0].body.scrollLeft || $document[0].documentElement.scrollLeft)
+        };
+      },
+
+      viewport: function () {
+        return {
+          pageYOffset: $window.pageYOffset || $document[0].body.scrollTop || $document[0].documentElement.scrollTop,
+          pageXOffset: $window.pageXOffset || $document[0].body.scrollLeft || $document[0].documentElement.scrollLeft,
+          innerWidth: $window.innerWidth || $document.documentElement.clientWidth || $document.body.clientWidth,
+          innerHeight: $window.innerHeight || $document.documentElement.clientHeight || $document.body.clientHeight
         };
       }
     };
-  }]);
+  }] );
